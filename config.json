@@ -1,0 +1,15 @@
+{
+  "corp_name": "가온전선",
+  "corp_code": "00104768",
+  "stock_code": "000500",
+  "start_year": 2010,
+  "fs_div": "CFS",
+  "report_codes": {
+    "annual": "11011",
+    "half_year": "11012",
+    "quarterly_q1": "11013",
+    "quarterly_q3": "11014"
+  },
+  "dart_base_url": "https://opendart.fss.or.kr/api",
+  "dashboard_url": "https://hsc-class02.github.io/JY_Gaon/"
+}

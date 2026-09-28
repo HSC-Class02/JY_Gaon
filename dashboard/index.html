@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>가온전선 DART Financial Dashboard</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+:root{--ink:#172033;--muted:#64748b;--line:#e5e7eb;--panel:#fff;--bg:#f5f7fb;--accent:#0f766e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans KR",Arial,sans-serif}
+.container{max-width:1440px;margin:auto;padding:28px 22px 70px}header{background:#111827;color:#fff;padding:34px;border-radius:20px;margin-bottom:20px}
+h1{margin:0 0 8px;font-size:30px}h2{font-size:19px;margin:30px 0 14px}p{color:var(--muted)}header p{color:#cbd5e1;margin:0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 4px 16px #0f172a0a}
+.label{font-size:13px;color:var(--muted);margin-bottom:8px}.value{font-size:25px;font-weight:750}
+.chartgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.chart{background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px;min-height:380px}
+.table-wrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:16px}
+table{width:100%;border-collapse:collapse;min-width:900px}th,td{padding:12px 13px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th{background:#f8fafc;color:#475569;font-size:12px;position:sticky;top:0}td{font-size:13px}
+.empty{background:#fff;border:1px dashed #cbd5e1;padding:28px;border-radius:16px;color:#64748b}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#ecfdf5;color:#047857;font-size:12px;font-weight:700}
+footer{margin-top:36px;color:#64748b;font-size:12px}a{color:#0f766e}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.chartgrid{grid-template-columns:1fr}}@media(max-width:560px){.grid{grid-template-columns:1fr}}
+</style></head>
+<body><main class="container">
+<header><span class="badge">DART · OpenDART · 자동 업데이트</span><h1>가온전선 재무 Dashboard</h1>
+<p>사업보고서 · 반기보고서 · 분기보고서 | 2010~현재 | 연결 기준 기본 분석</p></header>
+<div class="grid"><div class="card"><div class="label">매출액</div><div class="value">—</div></div><div class="card"><div class="label">영업이익</div><div class="value">—</div></div><div class="card"><div class="label">당기순이익</div><div class="value">—</div></div><div class="card"><div class="label">영업활동현금흐름</div><div class="value">—</div></div><div class="card"><div class="label">영업이익률</div><div class="value">—</div></div><div class="card"><div class="label">ROE</div><div class="value">—</div></div><div class="card"><div class="label">부채비율</div><div class="value">—</div></div><div class="card"><div class="label">유동비율</div><div class="value">—</div></div></div>
+<h2>주요 추세</h2><div class="chartgrid"><div id="profit" class="chart"></div><div id="cash" class="chart"></div></div>
+<h2>수익성·재무안정성</h2><div class="chartgrid"><div id="margins" class="chart"></div><div id="solvency" class="chart"></div></div>
+<section><h2>Annual · 사업보고서</h2><div class="empty">아직 수집된 데이터가 없습니다. GitHub Actions에서 DART API 수집을 실행하세요.</div></section>
+<section><h2>Half-year · 반기보고서</h2><div class="empty">아직 수집된 데이터가 없습니다. GitHub Actions에서 DART API 수집을 실행하세요.</div></section>
+<section><h2>Quarterly · 분기 기준</h2><div class="empty">아직 수집된 데이터가 없습니다. GitHub Actions에서 DART API 수집을 실행하세요.</div></section>
+<section><h2>국내 Peer firms</h2><div class="table-wrap"><table><thead><tr><th>기업</th><th>종목코드</th><th>비교 범위</th></tr></thead><tbody><tr><td>LS전선</td><td>비상장</td><td>전력·산업용 전선</td></tr><tr><td>대한전선</td><td>001440</td><td>전력·산업용 전선</td></tr><tr><td>일진전기</td><td>103590</td><td>전선 및 전력기기</td></tr><tr><td>LS에코에너지</td><td>229640</td><td>전선·케이블</td></tr><tr><td>대원전선</td><td>006340</td><td>전선 제조</td></tr><tr><td>KBI메탈</td><td>024840</td><td>전선/전장 관련</td></tr></tbody></table></div></section>
+<footer>Source: Financial Supervisory Service OpenDART. 재무비율 정의와 분석 순서는 프로젝트에 첨부된 「재무제표 및 재무비율 실무 가이드」를 기준으로 구현했습니다. 금액 단위는 DART API 원자료의 단위를 따릅니다.</footer>
+</main>
+<script>
+const DATA={"annual": [], "half_year": [], "quarterly": []};
+function annualSorted(){return [...DATA.annual].sort((a,b)=>a.year-b.year)}
+const a=annualSorted(), years=a.map(x=>x.year);
+function trace(y,name){return {x:years,y:a.map(x=>x[y]),name,mode:'lines+markers',connectgaps:false}}
+const common={margin:{l:55,r:20,t:55,b:45},paper_bgcolor:'#fff',plot_bgcolor:'#fff',legend:{orientation:'h'},font:{family:'Inter,Noto Sans KR,Arial'}};
+Plotly.newPlot('profit',[trace('revenue','매출액'),trace('operating_income','영업이익'),trace('net_income','당기순이익')],{...common,title:'매출 및 이익 추세',yaxis:{title:'DART 원자료 단위'}},{responsive:true});
+Plotly.newPlot('cash',[trace('cfo','CFO'),trace('capex','CAPEX'),trace('fcf','FCF')],{...common,title:'현금창출력과 투자',yaxis:{title:'DART 원자료 단위'}},{responsive:true});
+Plotly.newPlot('margins',[trace('operating_margin','영업이익률'),trace('net_margin','순이익률'),trace('roe','ROE')],{...common,title:'수익성 지표',yaxis:{ticksuffix:'%'}},{responsive:true});
+Plotly.newPlot('solvency',[trace('debt_ratio','부채비율'),trace('current_ratio','유동비율'),trace('equity_ratio','자기자본비율')],{...common,title:'재무안정성 지표',yaxis:{ticksuffix:'%'}},{responsive:true});
+</script></body></html>
